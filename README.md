@@ -14,3 +14,4 @@ Pyvern
 
 # TODO:
 * Containerize
+* Logging
