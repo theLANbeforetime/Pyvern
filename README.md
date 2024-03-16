@@ -1,8 +1,8 @@
 Pyvern
 ===============
 
-#Overview:
+# Overview:
 * Bot built for Veronyx's Discord
 
-#TODO:
+# TODO:
 * How to use
