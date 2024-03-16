@@ -45,7 +45,7 @@ class MyClient(discord.Client):
         print('EventSub Registered')
         eventsub.start()
         print('EventSub Starting')
-        user = await first(twitch.get_users(logins='volt_me'))
+        user = await first(twitch.get_users(logins='veronyx'))
         print(f'User ID retrieved: ', user.id)
         await eventsub.listen_stream_online(user.id, self.on_follow)
         await eventsub.listen_stream_offline(user.id, self.on_follow)
@@ -81,8 +81,6 @@ class MyClient(discord.Client):
                             )
                             print("Message created.")
                             break
-
-
     @check_data_loop.before_loop
     async def before_my_task(self):
         await self.wait_until_ready()  # wait until the bot logs in
