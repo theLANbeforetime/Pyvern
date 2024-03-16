@@ -74,10 +74,7 @@ class MyClient(discord.Client):
                         else:
                             print("Streaming message does not exist, starting message creation.")
                             await channel.send(
-                                f"@here \n 
-                                :red_circle: **LIVE** \n 
-                                Veronyx is now streaming! \n 
-                                https://www.twitch.tv/veronyx"
+                                f"@here \n :red_circle: **LIVE** \n Veronyx is now streaming! \n https://www.twitch.tv/veronyx"
                             )
                             print("Message created.")
                             break
