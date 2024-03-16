@@ -53,7 +53,7 @@ class MyClient(discord.Client):
     @tasks.loop(seconds=10)  # task runs every 10 seconds
     async def check_data_loop(self):
         print('Loop running...')
-        channel = self.get_channel(1208478666481209416)
+        channel = self.get_channel(1180815561307996160)
 
         with open('live_status.json', 'r') as file:
             json_data=json.load(file)
