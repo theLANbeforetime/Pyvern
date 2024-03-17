@@ -28,7 +28,7 @@ class MyClient(discord.Client):
         self.check_data_loop.start()
 
     async def on_follow(self, data: any):
-        print("Event received: "+data.to_dict())
+        print(data.to_dict())
         with open('live_status.json', 'w') as file:
             json.dump(data.to_dict(), file)
         
@@ -53,7 +53,7 @@ class MyClient(discord.Client):
 
     @tasks.loop(seconds=10)  # task runs every 10 seconds
     async def check_data_loop(self):
-        logging.info('Loop is running.')
+        logging.info('Los running.')
         channel = self.get_channel(1180815561307996160) #General: 1180815561307996160 Bot-Testing: 1208478666481209416
         logging.debug(f'Channel aquired: {channel}')
         with open('live_status.json', 'r') as file:
