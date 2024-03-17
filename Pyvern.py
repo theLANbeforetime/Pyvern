@@ -65,7 +65,7 @@ class MyClient(discord.Client):
                     print('Trying to find match with stream.offline')
                     if json_data["subscription"]["type"] == 'stream.offline':
                         print('Match found for stream.offline')
-                        async for message in channel.history(limit=200):
+                        async for message in channel.history(limit=50):
                             if "Veronyx is now streaming!" in message.content:
                                 print('Deleting message...')
                                 await message.delete()
@@ -75,7 +75,7 @@ class MyClient(discord.Client):
                     print('Trying to find match with stream.online')
                     if json_data["subscription"]["type"] == 'stream.online':
                         print('Match found for stream.online')
-                        async for message in channel.history(limit=200):
+                        async for message in channel.history(limit=50):
                             if "Veronyx is now streaming!" in message.content:
                                 print('Streamer alert already exists skipping creation.')
                                 break
