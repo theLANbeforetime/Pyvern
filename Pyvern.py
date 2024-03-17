@@ -28,7 +28,7 @@ class MyClient(discord.Client):
         self.check_data_loop.start()
 
     async def on_follow(self, data: any):
-        print(data.to_dict())
+        print("Event received: "+data.to_dict())
         with open('live_status.json', 'w') as file:
             json.dump(data.to_dict(), file)
         
@@ -53,43 +53,43 @@ class MyClient(discord.Client):
 
     @tasks.loop(seconds=10)  # task runs every 10 seconds
     async def check_data_loop(self):
-        print('Loop running...')
+        logging.info('Loop is running.')
         channel = self.get_channel(1180815561307996160) #General: 1180815561307996160 Bot-Testing: 1208478666481209416
-        print(f'Channel aquired: {channel}')
+        logging.debug(f'Channel aquired: {channel}')
         with open('live_status.json', 'r') as file:
             json_data=json.load(file)
-            print(f'Json data loaded: {json_data}')
+            logging.debug(f'Json data loaded: {json_data}')
             if json_data is not None:
-                print('File is not empty. Proceeding...')
+                logging.debug('File is not empty. Proceeding...')
                 if json_data["subscription"]["type"] is not None:
-                    print('Trying to find match with stream.offline')
+                    logging.debug('Trying to find match with stream.offline')
                     if json_data["subscription"]["type"] == 'stream.offline':
-                        print('Match found for stream.offline')
+                        logging.debug('Match found for stream.offline')
                         async for message in channel.history(limit=50):
                             if "Veronyx is now streaming!" in message.content:
-                                print('Deleting message...')
+                                logging.info('Deleting message...')
                                 await message.delete()
-                                print('Message deleted.')
+                                logging.info('Message deleted.')
                                 break
-                    print('stream.offline not found')
-                    print('Trying to find match with stream.online')
+                    logging.debug('stream.offline not found')
+                    logging.debug('Trying to find match with stream.online')
                     if json_data["subscription"]["type"] == 'stream.online':
-                        print('Match found for stream.online')
+                        logging.debug('Match found for stream.online')
                         async for message in channel.history(limit=50):
                             if "Veronyx is now streaming!" in message.content:
-                                print('Streamer alert already exists skipping creation.')
+                                logging.debug('Streamer alert already exists skipping creation.')
                                 break
                             else:
-                                print("Streaming message does not exist, starting message creation.")
+                                logging.info("Streaming message does not exist, starting message creation.")
                                 await channel.send(
                                     f"@here \n :red_circle: **LIVE** \n Veronyx is now streaming! \n https://www.twitch.tv/veronyx"
                                 )
-                                print("Message created.")
+                                logging.info("Message created.")
                                 break
                     else:
-                        print('No subscription types found...')
+                        logging.debug('No subscription types found...')
             else:
-                print('File is empty...')
+                logging.debug('File is empty...')
 
     @check_data_loop.before_loop
     async def before_my_task(self):
@@ -101,7 +101,7 @@ handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w'
 
 def run():
     # Create discord instance
-    print('Starting Discord')
-    client.run(DISCORD_TOKEN, log_handler=handler, log_level=logging.DEBUG)
+    print('Starting Discord Bot')
+    client.run(DISCORD_TOKEN, log_handler=handler, log_level=logging.INFO, root_logger=True)
 
 asyncio.run(run())
