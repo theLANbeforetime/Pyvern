@@ -53,7 +53,7 @@ class MyClient(discord.Client):
 
     @tasks.loop(seconds=10)  # task runs every 10 seconds
     async def check_data_loop(self):
-        logging.info('Los running.')
+        logging.info('Loops running.')
         channel = self.get_channel(1180815561307996160) #General: 1180815561307996160 Bot-Testing: 1208478666481209416
         logging.debug(f'Channel aquired: {channel}')
         with open('live_status.json', 'r') as file:
@@ -66,26 +66,28 @@ class MyClient(discord.Client):
                     if json_data["subscription"]["type"] == 'stream.offline':
                         logging.debug('Match found for stream.offline')
                         async for message in channel.history(limit=50):
-                            if "Veronyx is now streaming!" in message.content:
-                                logging.info('Deleting message...')
-                                await message.delete()
-                                logging.info('Message deleted.')
-                                break
+                                if "Veronyx is now streaming!" in message.content:
+                                    logging.info('Deleting message...')
+                                    await message.delete()
+                                    logging.info('Message deleted.')
+                                    break
                     logging.debug('stream.offline not found')
                     logging.debug('Trying to find match with stream.online')
                     if json_data["subscription"]["type"] == 'stream.online':
                         logging.debug('Match found for stream.online')
-                        async for message in channel.history(limit=50):
+                        messages = [message async for message in channel.history(limit=50)]
+                        live_notifications = []
+                        for message in messages:
                             if "Veronyx is now streaming!" in message.content:
-                                logging.debug('Streamer alert already exists skipping creation.')
-                                break
-                            else:
-                                logging.info("Streaming message does not exist, starting message creation.")
-                                await channel.send(
-                                    f"@here \n :red_circle: **LIVE** \n Veronyx is now streaming! \n https://www.twitch.tv/veronyx"
-                                )
-                                logging.info("Message created.")
-                                break
+                                live_notifications.append(message)
+                        if not live_notifications:
+                            logging.info("Streaming message does not exist, starting message creation.")
+                            await channel.send(
+                                f"@here \n :red_circle: **LIVE** \n Veronyx is now streaming! \n https://www.twitch.tv/veronyx"
+                            )
+                            logging.info("Message created.")
+                        else:
+                            logging.debug("Notification exists")
                     else:
                         logging.debug('No subscription types found...')
             else:
@@ -102,6 +104,6 @@ handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w'
 def run():
     # Create discord instance
     print('Starting Discord Bot')
-    client.run(DISCORD_TOKEN, log_handler=handler, log_level=logging.INFO, root_logger=True)
+    client.run(DISCORD_TOKEN, log_handler=handler, log_level=logging.DEBUG, root_logger=True)
 
 asyncio.run(run())
