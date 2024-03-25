@@ -1,14 +1,7 @@
-from twitchAPI.helper import first
-from twitchAPI.twitch import Twitch
-from twitchAPI.oauth import UserAuthenticationStorageHelper
-from twitchAPI.eventsub.websocket import EventSubWebsocket
-from twitchAPI.type import AuthScope
 from discord.ext import tasks
 import logging
 import json
-import twitchAPI
 import discord
-import asyncio
 
 
 # create the discord client instance
