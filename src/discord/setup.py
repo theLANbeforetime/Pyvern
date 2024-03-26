@@ -38,7 +38,7 @@ class DiscordClient(discord.Client):
                     logging.debug('Trying to find match with stream.offline')
                     if json_data["subscription"]["type"] == 'stream.offline':
                         logging.debug('Match found for stream.offline')
-                        async for message in  channel.history(limit=50):
+                        async for message in channel.history(limit=50):
                                 if "Veronyx is now streaming!" in message.content:
                                     logging.info('Deleting message...')
                                     await message.delete()
@@ -55,7 +55,7 @@ class DiscordClient(discord.Client):
                                 live_notifications.append(message)
                         if not live_notifications:
                             logging.info("Streaming message does not exist, starting message creation.")
-                            await self.channel.send(
+                            await channel.send(
                                 f"@here \n :red_circle: **LIVE** \n Veronyx is now streaming! \n https://www.twitch.tv/veronyx"
                             )
                             logging.info("Message created.")
